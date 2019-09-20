@@ -13,7 +13,7 @@
         - build
   post_tasks:
     - name: "Start unison sync"
-      script: /usr/bin/flock -n /tmp/synclock -c 'unison gits' > /dev/null
+      command: /usr/bin/flock -n /tmp/synclock -c 'unison gits' > /dev/null
 
   roles:
     - dev
