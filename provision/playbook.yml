@@ -11,15 +11,18 @@
         update_cache: yes
       tags:
         - build
-  post_tasks:
+  pre_tasks:
     - name: "Copy default-gems"
       copy:
-        src: "{{ role_path }}/files/default-gems"
-        dest: "{{ ansible_env.HOME }}/.rbenv/default-gems"
+        src: "files/default-gems"
+        dest: "{{ ansible_env.HOME }}/.default-gems"
+  post_tasks:
+
     - name: "Start unison sync"
       script: /usr/bin/flock -n /tmp/synclock -c 'unison gits' > /dev/null
 
   roles:
+    - dev
     - role: jdauphant.unbound
       become: yes
       # Forward server to Cloudflare DNS
@@ -42,7 +45,6 @@
             - Path */cache/*
             - Path */tmp/*
     - krypton
-    - dev
     - role: bearandgiraffe.heroku-cli
       become: yes
     - role: simplifield.postgres
@@ -60,8 +62,8 @@
         version: v1.1.2
         default_ruby: 2.6.3
         rubies:
-          - version: 2.6.4
           - version: 2.6.3
+      default_gems_file: "{{ansible_env.HOME}}/.default-gems"
       rbenv_users:
         - vagrant
       rbenv_plugins:
@@ -74,10 +76,3 @@
         - { name: "rbenv-update",
             repo: "https://github.com/rkh/rbenv-update.git",
             version: "master" }
-    - role: eendroroy.nodenv
-      nodenv:
-        plugins:
-          - { name: node-build, repo: 'https://github.com/nodenv/node-build.git' }
-      nodes:
-        - version: 9.11.2
-        - version: 9.11.1

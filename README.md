@@ -16,3 +16,4 @@
  * Unison sync between `~/host_home/gits` and `~/gits`
  * Mailhog
  * Ngrok
+ * Git bash prompt from https://github.com/magicmonty/bash-git-prompt

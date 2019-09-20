@@ -1,3 +1,14 @@
-git_name: Steven Allen
-git_email: sallen@tractionguest.com
+git_name: YOUR NAME HERE
+git_email: person@example.com
+
+# Example: if your git workspaces on your local machine are stored in "~/gits", use this:
 host_workspace_path: gits/
+# host_workspace_path: workspaces/ # if your code workspace is in `workspaces` in your home directory
+
+
+# Your ngrok auth token (https://dashboard.ngrok.com/get-started)
+ngrok_auth_token: XXXXXXXXXXXXXXXXXXXXXXXXXX
+
+# Uncomment and populate these if you want nordvpn installed
+# nordvpn_user: 
+# nordvpn_password:

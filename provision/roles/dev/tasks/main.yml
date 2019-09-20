@@ -63,7 +63,7 @@
 - name: Ensure unison job exists
   cron:
     name: "sync gits with host"
-    minute: "*/5"
+    minute: "*/30"
     job: "/usr/bin/flock -n /tmp/synclock -c 'unison gits' > /dev/null"
 
 ### NordVPN
@@ -83,12 +83,15 @@
   apt:
     deb: /tmp/nordvpn-release_1.0.0_all.deb
 - name: Install nordvpn
+  when: nordvpn_user is defined
   become: yes
   apt:
     package: nordvpn
     state: present
     update_cache: yes
-
+- name: Login to nordvpn
+  when: nordvpn_user is defined
+  command: nordvpn login -u {{ nordvpn_user }} -p {{ nordvpn_password }}
 ### ~/bin
 - name: Ensure ~/bin
   file:
@@ -115,5 +118,23 @@
     remote_src: yes
 - name: Update ngrok
   command: "{{ ansible_env.HOME}}/bin/ngrok update"
+- name: Link ngrok
+  when: ngrok_auth_token is defined
+  command: "{{ ansible_env.HOME}}/bin/ngrok authtoken {{ ngrok_auth_token }}"
 
-  
+### nodenv
+- name: Clone nodenv
+  git:
+    repo: https://github.com/nodenv/nodenv.git
+    dest: "{{ ansible_env.HOME }}/.nodenv"
+- name: Ensure nodenv config
+  blockinfile:
+    dest: "{{ ansible_env.HOME }}/.bashrc"
+    block: |
+      export PATH="$HOME/.nodenv/bin:$PATH"
+      eval "$(nodenv init -)"
+    marker: '# {mark} ANSIBLE MANAGED BLOCK - nodenv'
+- name: node-build
+  git:
+    repo: https://github.com/nodenv/nodenv.git
+    dest: "{{ ansible_env.HOME }}/.nodenv/plugins/node-build"
