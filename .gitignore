@@ -1,3 +1,5 @@
 .vagrant
 provision/roles/*
 !provision/roles/dev
+!provision/roles/krypton
+.DS_Store

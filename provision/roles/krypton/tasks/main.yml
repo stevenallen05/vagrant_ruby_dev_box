@@ -1,0 +1,40 @@
+---
+# tasks file for krypton
+- name: "Install krypton key"
+  become: yes
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: C4A05888A1C4FA02E1566F859F2A29A569653940
+    
+- name: "Ensure krypton repo"
+  become: yes
+  apt_repository:
+    repo: deb http://kryptco.github.io/deb kryptco main
+    state: present
+- name: "Install krypton"
+  become: yes
+  apt:
+    package: kr
+    state: present
+- name: Ensure ~/.ssh
+  file:
+    path: /home/vagrant/.ssh
+    state: directory
+    mode: '0755'
+- name: Ensure sshconfig exists
+  file:
+    path: "{{ ansible_env.HOME }}/.ssh/config"
+    state: touch
+- name: Setup krypton for ssh
+  blockinfile:
+    dest: "{{ ansible_env.HOME }}/.ssh/config"
+    block: |
+      Host *
+              IdentityAgent ~/.kr/krd-agent.sock
+              ProxyCommand /usr/bin/krssh %h %p
+              IdentityFile ~/.ssh/id_krypton
+              IdentityFile ~/.ssh/id_ed25519
+              IdentityFile ~/.ssh/id_rsa
+              IdentityFile ~/.ssh/id_ecdsa
+              IdentityFile ~/.ssh/id_dsa
+    marker: '# {mark} ANSIBLE MANAGED BLOCK - krypton ssh'

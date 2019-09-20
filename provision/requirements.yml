@@ -4,3 +4,5 @@
   - src: geerlingguy.mailhog
   - src: zzet.rbenv
   - src: weareinteractive.unison
+  - src: eendroroy.nodenv
+  - src: bearandgiraffe.heroku-cli

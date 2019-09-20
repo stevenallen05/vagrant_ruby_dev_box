@@ -9,6 +9,13 @@
         update_cache: yes
       tags:
         - build
+  post_tasks:
+    - name: "Copy default-gems"
+      copy:
+        src: "{{ role_path }}/files/default-gems"
+        dest: "{{ ansible_env.HOME }}/.rbenv/default-gems"
+    - name: "Start unison sync"
+      script: /usr/bin/flock -n /tmp/synclock -c 'unison gits' > /dev/null
 
   roles:
     - role: weareinteractive.unison
@@ -25,6 +32,9 @@
             - Path */vendor/*
             - Path */cache/*
             - Path */tmp/*
+    - krypton
+    - role: bearandgiraffe.heroku-cli
+      become: yes
     - dev
     - role: simplifield.postgres
       become: yes
@@ -35,5 +45,27 @@
       become: yes
     - role: geerlingguy.mailhog
       become: yes
-    - zzet.rbenv
-
+    - role: zzet.rbenv
+      env: user
+      default_ruby: 2.6.3
+      rubies:
+        - version: 2.6.4
+      rbenv_users:
+        - vagrant
+      rbenv_plugins:
+        - { name: "ruby-build",
+            repo: "https://github.com/rbenv/ruby-build.git",
+            version: "master" }
+        - { name: "rbenv-default-gems",
+            repo: "https://github.com/rbenv/rbenv-default-gems.git",
+            version: "master" }
+        - { name: "rbenv-update",
+            repo: "https://github.com/rkh/rbenv-update.git",
+            version: "master" }
+    - role: eendroroy.nodenv
+      nodenv:
+        plugins:
+          - { name: node-build, repo: 'https://github.com/nodenv/node-build.git' }
+      nodes:
+        - version: 9.11.2
+        - version: 9.11.1

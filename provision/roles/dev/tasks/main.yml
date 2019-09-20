@@ -2,7 +2,7 @@
 # tasks file for provision/roles/dev
 - name: Ensure ~/gits
   file:
-    path: /home/vagrant/gits
+    path: "{{ ansible_env.HOME }}/gits"
     state: directory
     mode: '0755'
 - name: "Install basic dependencies"
@@ -17,6 +17,13 @@
     - dirmngr
     - gcc
     - wget
+    - libssl-dev
+    - libreadline-dev
+    - zlib1g-dev
+    - libcurl4
+    - libcurl4-openssl-dev
+    - libpq-dev
+    - unzip
 - name: "Install helpful things"
   become: yes
   apt:
@@ -26,19 +33,9 @@
     packages:
     - screen
     - glances
-- name: "Install krypton key"
-  apt_key:
-    keyserver: keyserver.ubuntu.com
-    id: C4A05888A1C4FA02E1566F859F2A29A569653940
-- name: "Ensure krypton repo"
-  apt_repository:
-    repo: deb http://kryptco.github.io/deb kryptco main
-    state: present
-- name: "Install krypton"
-  become: yes
-  apt:
-    package: kr
-    state: present
+    - stubby
+
+### Git bash
 - name: Setting up git bash theme
   git:
     repo: 'https://github.com/magicmonty/bash-git-prompt.git'
@@ -54,20 +51,36 @@
       fi
     marker: '# {mark} ANSIBLE MANAGED BLOCK - gitprompt'
 
-- name: Setup krypton for ssh
-  blockinfile:
-    dest: "{{ ansible_env.HOME }}/.ssh/config"
-    block: |
-      Host *
-              IdentityAgent ~/.kr/krd-agent.sock
-              ProxyCommand /usr/bin/krssh %h %p
-              IdentityFile ~/.ssh/id_krypton
-              IdentityFile ~/.ssh/id_ed25519
-              IdentityFile ~/.ssh/id_rsa
-              IdentityFile ~/.ssh/id_ecdsa
-              IdentityFile ~/.ssh/id_dsa
-    marker: '# {mark} ANSIBLE MANAGED BLOCK - krypton ssh'
+### NordVPN
+- name: Check if nordvpn repo is installed
+  command: dpkg-query -W nordvpn-release
+  register: nordvpn_repo_check
+  failed_when: nordvpn_repo_check.rc > 1
+  changed_when: nordvpn_repo_check.rc == 1
+- name: Download nordvpn repo
+  when: nordvpn_repo_check.rc == 1
+  get_url:
+    url: https://repo.nordvpn.com/deb/nordvpn/debian/pool/main/nordvpn-release_1.0.0_all.deb
+    dest: /tmp/nordvpn-release_1.0.0_all.deb
+- name: Install nordvpn repo
+  become: yes
+  when: nordvpn_repo_check.rc == 1
+  apt:
+    deb: /tmp/nordvpn-release_1.0.0_all.deb
+- name: Install nordvpn
+  become: yes
+  apt:
+    package: nordvpn
+    state: present
+    update_cache: yes
 
+
+### Cleanup
+- name: Add heroku key
+  become: yes
+  apt_key:
+    url: http://toolbelt.herokuapp.com/apt/release.key
+    state: present
 - name: "Copy gitconfig"
   copy:
     src: "{{ role_path }}/files/.gitconfig"
@@ -77,3 +90,30 @@
     name: "sync gits with host"
     minute: "*/30"
     job: "/usr/bin/flock -n /tmp/synclock -c 'unison gits' > /dev/null"
+
+### ~/bin
+- name: Ensure ~/bin
+  file:
+    path: "{{ ansible_env.HOME }}/bin"
+    state: directory
+    mode: '0755'
+- name: Ensure local bin
+  blockinfile:
+    dest: "{{ ansible_env.HOME }}/.bashrc"
+    block: |
+      export PATH=$HOME/bin:$PATH
+    marker: '# {mark} ANSIBLE MANAGED BLOCK - $HOME/bin'
+
+### ngrok
+- name: Check that the ngrok bin exists
+  stat:
+    path: "{{ ansible_env.HOME }}/bin/ngrok"
+  register: ngrok_result
+- name: Download and install ngrok
+  when: ngrok_result.stat.exists == False
+  unarchive:
+    src: https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip
+    dest: "{{ ansible_env.HOME}}/bin/"
+    remote_src: yes
+- name: Update ngrok
+  script: "{{ ansible_env.HOME}}/bin/ngrok update"
