@@ -1,10 +1,10 @@
 ### My Vagrant/Ansible dev box setup
 
-Requires:
+#### Requires:
  * Vagrant
  * Ansible
 
-Provides:
+#### Provides:
  * Postgresql
  * Redis
  * RabbitMQ
