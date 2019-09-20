@@ -11,13 +11,7 @@
         update_cache: yes
       tags:
         - build
-  pre_tasks:
-    - name: "Copy default-gems"
-      copy:
-        src: "files/default-gems"
-        dest: "{{ ansible_env.HOME }}/.default-gems"
   post_tasks:
-
     - name: "Start unison sync"
       script: /usr/bin/flock -n /tmp/synclock -c 'unison gits' > /dev/null
 
@@ -63,7 +57,7 @@
         default_ruby: 2.6.3
         rubies:
           - version: 2.6.3
-      default_gems_file: "{{ansible_env.HOME}}/.default-gems"
+      default_gems_file: "{{ playbook_dir }}/files/default-gems"
       rbenv_users:
         - vagrant
       rbenv_plugins:

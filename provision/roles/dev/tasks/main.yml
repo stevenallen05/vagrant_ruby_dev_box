@@ -83,15 +83,11 @@
   apt:
     deb: /tmp/nordvpn-release_1.0.0_all.deb
 - name: Install nordvpn
-  when: nordvpn_user is defined
   become: yes
   apt:
     package: nordvpn
     state: present
     update_cache: yes
-- name: Login to nordvpn
-  when: nordvpn_user is defined
-  command: nordvpn login -u {{ nordvpn_user }} -p {{ nordvpn_password }}
 ### ~/bin
 - name: Ensure ~/bin
   file:

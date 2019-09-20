@@ -8,7 +8,3 @@ host_workspace_path: gits/
 
 # Your ngrok auth token (https://dashboard.ngrok.com/get-started)
 ngrok_auth_token: XXXXXXXXXXXXXXXXXXXXXXXXXX
-
-# Uncomment and populate these if you want nordvpn installed
-# nordvpn_user: 
-# nordvpn_password:
