@@ -12,7 +12,7 @@ Vagrant.configure("2") do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
-  config.vm.box = "hashicorp/precise64"
+  config.vm.box = "hashicorp/bionic64"
   # config.disksize.size = "50GB"
 
 
@@ -68,6 +68,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision "ansible" do |ansible|
     ansible.galaxy_role_file = "provision/requirements.yml"
     ansible.playbook = "provision/playbook.yml"
+    ansible.extra_vars = { ansible_python_interpreter:"/usr/bin/python3" }
   end
 
   # Enable provisioning with a shell script. Additional provisioners such as

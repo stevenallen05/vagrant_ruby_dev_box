@@ -1,3 +1,4 @@
 ---
 # defaults file for provision/roles/dev
 dev:
+  vagrant_home: /home/vagrant

@@ -1,13 +1,39 @@
 ---
 - hosts: all
   remote_user: root
+  pre_tasks:
+    - name: Update apt
+      become: yes
+      apt:
+        cache_valid_time: 1800
+        update_cache: yes
+      tags:
+        - build
+
   roles:
+    - role: weareinteractive.unison
+      become: yes
+      unison_user: vagrant
+      unison_configs:
+        - name: gits
+          src: /home/vagrant/host_home/gits
+          dest: /home/vagrant/gits
+          ignore:
+            - Path */build/*
+            - Name *.log
+            - Path */node_modules/*
+            - Path */vendor/*
+            - Path */cache/*
+            - Path */tmp/*
     - dev
-    - zzet.postgresql
-    - geerlingguy.redis
-    - silverlogic.rabbitmq
-    - geerlingguy.mailhog
+    - role: simplifield.postgres
+      become: yes
+    - role: geerlingguy.redis
+      become: yes
+    - role: silverlogic.rabbitmq
+      rabbitmq_ssl: false
+      become: yes
+    - role: geerlingguy.mailhog
+      become: yes
     - zzet.rbenv
-  tasks:
-    - name: Install Krypton
-      shell: curl https://krypt.co/kr | sh 
+

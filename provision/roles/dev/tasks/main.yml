@@ -1,15 +1,79 @@
 ---
 # tasks file for provision/roles/dev
-# - name: "Install Postgresql"
-#   package:
-#     name: "postgresql"
-#     state: present
-# - name: "Start Postgresql Service"
-#   service:
-#     name: "postgresql"
-#     state: started
-#     enabled: yes
-# - name: "Copy Web Content"
-#   copy:
-#     src: "{{ role_path }}/files/.gitconfig"
-#     dest: "{{  }}/index.html"
+- name: Ensure ~/gits
+  file:
+    path: /home/vagrant/gits
+    state: directory
+    mode: '0755'
+- name: "Install basic dependencies"
+  become: yes
+  apt:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+    - ca-certificates
+    - software-properties-common
+    - dirmngr
+    - gcc
+    - wget
+- name: "Install helpful things"
+  become: yes
+  apt:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+    - screen
+    - glances
+- name: "Install krypton key"
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: C4A05888A1C4FA02E1566F859F2A29A569653940
+- name: "Ensure krypton repo"
+  apt_repository:
+    repo: deb http://kryptco.github.io/deb kryptco main
+    state: present
+- name: "Install krypton"
+  become: yes
+  apt:
+    package: kr
+    state: present
+- name: Setting up git bash theme
+  git:
+    repo: 'https://github.com/magicmonty/bash-git-prompt.git'
+    dest: "{{ ansible_env.HOME }}/.bash-git-prompt"
+    depth: 1
+- name: Ensure git bash theme in bashrc
+  blockinfile:
+    dest: "{{ ansible_env.HOME }}/.bashrc"
+    block: |
+      if [ -f "$HOME/.bash-git-prompt/gitprompt.sh" ]; then
+        GIT_PROMPT_ONLY_IN_REPO=1
+        source $HOME/.bash-git-prompt/gitprompt.sh
+      fi
+    marker: '# {mark} ANSIBLE MANAGED BLOCK - gitprompt'
+
+- name: Setup krypton for ssh
+  blockinfile:
+    dest: "{{ ansible_env.HOME }}/.ssh/config"
+    block: |
+      Host *
+              IdentityAgent ~/.kr/krd-agent.sock
+              ProxyCommand /usr/bin/krssh %h %p
+              IdentityFile ~/.ssh/id_krypton
+              IdentityFile ~/.ssh/id_ed25519
+              IdentityFile ~/.ssh/id_rsa
+              IdentityFile ~/.ssh/id_ecdsa
+              IdentityFile ~/.ssh/id_dsa
+    marker: '# {mark} ANSIBLE MANAGED BLOCK - krypton ssh'
+
+- name: "Copy gitconfig"
+  copy:
+    src: "{{ role_path }}/files/.gitconfig"
+    dest: "{{ ansible_env.HOME }}/.gitconfig"
+- name: Ensure unison job exists
+  cron:
+    name: "sync gits with host"
+    minute: "*/30"
+    job: "/usr/bin/flock -n /tmp/synclock -c 'unison gits' > /dev/null"
