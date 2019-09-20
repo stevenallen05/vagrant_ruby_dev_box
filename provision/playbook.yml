@@ -11,10 +11,6 @@
         update_cache: yes
       tags:
         - build
-  post_tasks:
-    - name: "Start unison sync"
-      command: /usr/bin/flock -n /tmp/synclock -c 'unison gits' > /dev/null
-
   roles:
     - dev
     - role: jdauphant.unbound
