@@ -33,7 +33,6 @@
     packages:
     - screen
     - glances
-    - stubby
 
 ### Git bash
 - name: Setting up git bash theme
@@ -58,13 +57,13 @@
     url: http://toolbelt.herokuapp.com/apt/release.key
     state: present
 - name: "Copy gitconfig"
-  copy:
-    src: "{{ role_path }}/files/.gitconfig"
+  template:
+    src: ".gitconfig.j2"
     dest: "{{ ansible_env.HOME }}/.gitconfig"
 - name: Ensure unison job exists
   cron:
     name: "sync gits with host"
-    minute: "*/30"
+    minute: "*/5"
     job: "/usr/bin/flock -n /tmp/synclock -c 'unison gits' > /dev/null"
 
 ### NordVPN

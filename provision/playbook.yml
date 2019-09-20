@@ -1,6 +1,8 @@
 ---
 - hosts: all
   remote_user: root
+  vars_files:
+    - ../config.yml
   pre_tasks:
     - name: Update apt
       become: yes
@@ -30,7 +32,7 @@
       unison_user: vagrant
       unison_configs:
         - name: gits
-          src: /home/vagrant/host_home/gits
+          src: "/home/vagrant/host_home/{{ host_workspace_path }}"
           dest: /home/vagrant/gits
           ignore:
             - Path */build/*
@@ -55,6 +57,7 @@
     - role: zzet.rbenv
       rbenv:
         env: user
+        version: v1.1.2
         default_ruby: 2.6.3
         rubies:
           - version: 2.6.4
