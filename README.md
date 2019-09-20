@@ -17,3 +17,16 @@
  * Mailhog
  * Ngrok
  * Git bash prompt from https://github.com/magicmonty/bash-git-prompt
+
+#### Config
+
+```bash
+# Make config.yml
+$ cp config.yml.example config.yml
+# Set your config variables
+$ vim config.yml
+```
+
+# Warning
+
+I won't help you fix this if you break it.
