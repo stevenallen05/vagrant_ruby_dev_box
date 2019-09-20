@@ -132,5 +132,5 @@
     marker: '# {mark} ANSIBLE MANAGED BLOCK - nodenv'
 - name: node-build
   git:
-    repo: https://github.com/nodenv/nodenv.git
+    repo: https://github.com/nodenv/node-build.git
     dest: "{{ ansible_env.HOME }}/.nodenv/plugins/node-build"
