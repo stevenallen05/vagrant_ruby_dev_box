@@ -51,6 +51,22 @@
       fi
     marker: '# {mark} ANSIBLE MANAGED BLOCK - gitprompt'
 
+### Cleanup
+- name: Add heroku key
+  become: yes
+  apt_key:
+    url: http://toolbelt.herokuapp.com/apt/release.key
+    state: present
+- name: "Copy gitconfig"
+  copy:
+    src: "{{ role_path }}/files/.gitconfig"
+    dest: "{{ ansible_env.HOME }}/.gitconfig"
+- name: Ensure unison job exists
+  cron:
+    name: "sync gits with host"
+    minute: "*/30"
+    job: "/usr/bin/flock -n /tmp/synclock -c 'unison gits' > /dev/null"
+
 ### NordVPN
 - name: Check if nordvpn repo is installed
   command: dpkg-query -W nordvpn-release
@@ -73,23 +89,6 @@
     package: nordvpn
     state: present
     update_cache: yes
-
-
-### Cleanup
-- name: Add heroku key
-  become: yes
-  apt_key:
-    url: http://toolbelt.herokuapp.com/apt/release.key
-    state: present
-- name: "Copy gitconfig"
-  copy:
-    src: "{{ role_path }}/files/.gitconfig"
-    dest: "{{ ansible_env.HOME }}/.gitconfig"
-- name: Ensure unison job exists
-  cron:
-    name: "sync gits with host"
-    minute: "*/30"
-    job: "/usr/bin/flock -n /tmp/synclock -c 'unison gits' > /dev/null"
 
 ### ~/bin
 - name: Ensure ~/bin

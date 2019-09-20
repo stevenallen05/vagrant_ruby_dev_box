@@ -40,9 +40,9 @@
             - Path */cache/*
             - Path */tmp/*
     - krypton
+    - dev
     - role: bearandgiraffe.heroku-cli
       become: yes
-    - dev
     - role: simplifield.postgres
       become: yes
     - role: geerlingguy.redis
@@ -53,10 +53,12 @@
     - role: geerlingguy.mailhog
       become: yes
     - role: zzet.rbenv
-      env: user
-      default_ruby: 2.6.3
-      rubies:
-        - version: 2.6.4
+      rbenv:
+        env: user
+        default_ruby: 2.6.3
+        rubies:
+          - version: 2.6.4
+          - version: 2.6.3
       rbenv_users:
         - vagrant
       rbenv_plugins:
