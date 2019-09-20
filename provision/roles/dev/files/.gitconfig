@@ -1,0 +1,9 @@
+[user]
+	name = Steven Allen
+	email = sallen@tractionguest.com
+[gpg]
+	program = /usr/local/bin/krgpg
+[commit]
+	gpgSign = true
+[tag]
+	forceSignAnnotated = true

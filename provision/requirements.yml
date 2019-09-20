@@ -1,0 +1,6 @@
+
+  - src: zzet.postgresql
+  - src: geerlingguy.redis
+  - src: silverlogic.rabbitmq
+  - src: geerlingguy.mailhog
+  - src: zzet.rbenv

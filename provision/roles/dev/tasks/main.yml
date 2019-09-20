@@ -1,0 +1,15 @@
+---
+# tasks file for provision/roles/dev
+# - name: "Install Postgresql"
+#   package:
+#     name: "postgresql"
+#     state: present
+# - name: "Start Postgresql Service"
+#   service:
+#     name: "postgresql"
+#     state: started
+#     enabled: yes
+# - name: "Copy Web Content"
+#   copy:
+#     src: "{{ role_path }}/files/.gitconfig"
+#     dest: "{{  }}/index.html"

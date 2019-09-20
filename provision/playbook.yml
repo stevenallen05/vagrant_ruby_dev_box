@@ -1,0 +1,13 @@
+---
+- hosts: all
+  remote_user: root
+  roles:
+    - dev
+    - zzet.postgresql
+    - geerlingguy.redis
+    - silverlogic.rabbitmq
+    - geerlingguy.mailhog
+    - zzet.rbenv
+  tasks:
+    - name: Install Krypton
+      shell: curl https://krypt.co/kr | sh 

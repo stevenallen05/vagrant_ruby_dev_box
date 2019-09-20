@@ -13,7 +13,7 @@ Vagrant.configure("2") do |config|
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
   config.vm.box = "hashicorp/precise64"
-  config.disksize.size = "50GB"
+  # config.disksize.size = "50GB"
 
 
   # Disable automatic box update checking. If you disable this, then
@@ -27,7 +27,7 @@ Vagrant.configure("2") do |config|
   # NOTE: This will enable public access to the opened port
   config.vm.network "forwarded_port", guest: 8025, host: 8025, host_ip: "127.0.0.1"
   config.vm.network "forwarded_port", guest: 3000, host: 3000, host_ip: "127.0.0.1"
-  config.vm.network "forwarded_port", guest: 22, host: 222, host_ip: "127.0.0.1"
+  # config.vm.network "forwarded_port", guest: 22, host: 222, host_ip: "127.0.0.1"
 
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine and only allow access
@@ -65,13 +65,23 @@ Vagrant.configure("2") do |config|
   # View the documentation for the provider you are using for more
   # information on available options.
 
+  config.vm.provision "ansible" do |ansible|
+    ansible.galaxy_role_file = "provision/requirements.yml"
+    ansible.playbook = "provision/playbook.yml"
+  end
+
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
+=begin
+
   config.vm.provision "shell", inline: <<-SHELL
     apt-get update
     apt-get -y upgrade
-    apt-get -y install build-essential git-core curl \
+  #   apt-get -y software-properties-common \
+    apt-get -y install build-essential git-core curl unison \
+                                       software-properties-common \
+
                        libssl-dev \
                        libyaml-dev \
                        libsqlite3-dev \
@@ -79,7 +89,17 @@ Vagrant.configure("2") do |config|
                        zlib1g zlib1g-dev \
                        libcurl4-openssl-dev \
                        libxslt-dev libxml2-dev \
-                       
+
+    apt-add-repository --yes --update ppa:ansible/ansible
+    # Install unison:
+    apt-get -y install unison ansible
+    # Configure git
+    git config --global user.name "Your Name"
+    git config --global user.email you@example.com
+
+    # Install krypton
+    curl https://krypt.co/kr | sh 
+
     git clone git://github.com/sstephenson/rbenv.git /usr/local/rbenv
 
     # Add rbenv to the path:
@@ -101,9 +121,7 @@ Vagrant.configure("2") do |config|
     rbenv global   2.3.3
     # Rehash:
     rbenv rehash
-
-    # Install unison:
-    apt-get -y install unison
-
   SHELL
+=end
+
 end
