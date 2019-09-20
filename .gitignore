@@ -2,4 +2,5 @@
 provision/roles/*
 !provision/roles/dev
 !provision/roles/krypton
+!provision/roles/dns_over_tls
 .DS_Store
