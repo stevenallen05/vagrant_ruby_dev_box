@@ -18,6 +18,13 @@
       script: /usr/bin/flock -n /tmp/synclock -c 'unison gits' > /dev/null
 
   roles:
+    - role: jdauphant.unbound
+      become: yes
+      # Forward server to Cloudflare DNS
+      unbound_forward_zone:
+        - "1.1.1.1@853#cloudflare-dns.com"
+        - "1.0.0.1@853#cloudflare-dns.com"
+
     - role: weareinteractive.unison
       become: yes
       unison_user: vagrant

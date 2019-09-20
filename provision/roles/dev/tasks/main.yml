@@ -116,4 +116,6 @@
     dest: "{{ ansible_env.HOME}}/bin/"
     remote_src: yes
 - name: Update ngrok
-  script: "{{ ansible_env.HOME}}/bin/ngrok update"
+  command: "{{ ansible_env.HOME}}/bin/ngrok update"
+
+  
