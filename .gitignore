@@ -5,3 +5,4 @@ provision/roles/*
 !provision/roles/dns_over_tls
 .DS_Store
 config.yml
+provision/files/home/.gem/credentials

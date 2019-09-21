@@ -1,0 +1,18 @@
+{   
+  "ruby.lint": {
+      "reek": false,
+      "rubocop": {
+          "lint": true, //enable all lint cops.
+          "require": [/* array: Require Ruby files. */],
+          "rails": true //Run extra rails cops
+      },
+      "ruby": true, //Runs ruby -wc
+      "fasterer": false,
+      "debride": false,
+      "ruby-lint": true
+  },
+  "git.ignoreLimitWarning": true,
+  "ruby.format": "rubocop",
+  "solargraph.useBundler": false,
+  "solargraph.commandPath": "/home/vagrant/.rbenv/shims/solargraph",
+}

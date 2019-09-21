@@ -1,0 +1,23 @@
+- name: powerline font
+  become: yes
+  apt:
+    package: fonts-powerline
+    state: present
+- name: Check if themes are set up
+  stat:
+    path: "{{ ansible_env.HOME }}/.oh-my-bash/oh-my-bash.sh"
+  register: ohmybash_result
+- name: Download oh-my-bash
+  when: ohmybash_result.stat.exists == False
+  get_url:
+    url: https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh
+    dest: /tmp/install-oh-my-bash.sh
+    mode: "0755"
+- name: Set up oh-my-bash
+  when: ohmybash_result.stat.exists == False
+  command: /tmp/install-oh-my-bash.sh
+- name: Set bash theme
+  lineinfile:
+    path: "{{ ansible_env.HOME }}/.bashrc"
+    regexp: '^OSH_THEME='
+    line: OSH_THEME="{{ bash_theme }}"

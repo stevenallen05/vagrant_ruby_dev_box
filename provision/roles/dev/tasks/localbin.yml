@@ -1,0 +1,11 @@
+- name: Ensure ~/bin
+  file:
+    path: "{{ ansible_env.HOME }}/bin"
+    state: directory
+    mode: '0755'
+- name: Ensure local bin
+  blockinfile:
+    dest: "{{ ansible_env.HOME }}/.bashrc"
+    block: |
+      export PATH=$HOME/bin:$PATH
+    marker: '# {mark} ANSIBLE MANAGED BLOCK - $HOME/bin'

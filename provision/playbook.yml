@@ -11,6 +11,24 @@
         update_cache: yes
       tags:
         - build
+  post_tasks:
+    ### Postgresql no password
+    - name: "No-password postgres"
+      become: yes
+      copy:
+        src: files/pg_hba.conf
+        dest: /etc/postgresql/9.6/main/pg_hba.conf
+    - name: Ensure postgres vagrant user
+      become: yes
+      postgresql_user:
+        name: vagrant
+        state: present
+        role_attr_flags: SUPERUSER
+    - name: Reload postgres
+      become: yes
+      service:
+        name: postgresql
+        state: reloaded
   roles:
     - dev
     - role: jdauphant.unbound

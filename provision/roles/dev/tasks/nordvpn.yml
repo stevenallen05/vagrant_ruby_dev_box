@@ -1,0 +1,21 @@
+- name: Check if nordvpn repo is installed
+  command: dpkg-query -W nordvpn-release
+  register: nordvpn_repo_check
+  failed_when: nordvpn_repo_check.rc > 1
+  changed_when: nordvpn_repo_check.rc == 1
+- name: Download nordvpn repo
+  when: nordvpn_repo_check.rc == 1
+  get_url:
+    url: https://repo.nordvpn.com/deb/nordvpn/debian/pool/main/nordvpn-release_1.0.0_all.deb
+    dest: /tmp/nordvpn-release_1.0.0_all.deb
+- name: Install nordvpn repo
+  become: yes
+  when: nordvpn_repo_check.rc == 1
+  apt:
+    deb: /tmp/nordvpn-release_1.0.0_all.deb
+- name: Install nordvpn
+  become: yes
+  apt:
+    package: nordvpn
+    state: present
+    update_cache: yes

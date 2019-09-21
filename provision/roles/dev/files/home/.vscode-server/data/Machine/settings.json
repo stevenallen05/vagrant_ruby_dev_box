@@ -1,0 +1,5 @@
+{
+  "solargraph.bundlerPath": "",
+  "solargraph.useBundler": false,
+  "solargraph.commandPath": "/home/vagrant/.rbenv/shims/solargraph"
+}

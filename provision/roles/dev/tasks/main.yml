@@ -5,132 +5,31 @@
     path: "{{ ansible_env.HOME }}/gits"
     state: directory
     mode: '0755'
-- name: "Install basic dependencies"
-  become: yes
-  apt:
-    name: "{{ packages }}"
-    state: present
-  vars:
-    packages:
-    - ca-certificates
-    - software-properties-common
-    - dirmngr
-    - gcc
-    - wget
-    - libssl-dev
-    - libreadline-dev
-    - zlib1g-dev
-    - libcurl4
-    - libcurl4-openssl-dev
-    - libpq-dev
-    - unzip
-- name: "Install helpful things"
-  become: yes
-  apt:
-    name: "{{ packages }}"
-    state: present
-  vars:
-    packages:
-    - screen
-    - glances
 
-### Git bash
-- name: Setting up git bash theme
-  git:
-    repo: 'https://github.com/magicmonty/bash-git-prompt.git'
-    dest: "{{ ansible_env.HOME }}/.bash-git-prompt"
-    depth: 1
-- name: Ensure git bash theme in bashrc
-  blockinfile:
-    dest: "{{ ansible_env.HOME }}/.bashrc"
-    block: |
-      if [ -f "$HOME/.bash-git-prompt/gitprompt.sh" ]; then
-        GIT_PROMPT_ONLY_IN_REPO=1
-        source $HOME/.bash-git-prompt/gitprompt.sh
-      fi
-    marker: '# {mark} ANSIBLE MANAGED BLOCK - gitprompt'
+### home dir sync
+- name: $HOME templating
+  import_tasks: home_sync.yml
+
+### Bash themes
+- name: Setup bash themes
+  import_tasks: ohmybash.yml
 
 ### Cleanup
-- name: Add heroku key
-  become: yes
-  apt_key:
-    url: http://toolbelt.herokuapp.com/apt/release.key
-    state: present
-- name: "Copy gitconfig"
-  template:
-    src: ".gitconfig.j2"
-    dest: "{{ ansible_env.HOME }}/.gitconfig"
-- name: Ensure unison job exists
-  cron:
-    name: "sync gits with host"
-    minute: "*/30"
-    job: "/usr/bin/flock -n /tmp/synclock -c 'unison gits' > /dev/null"
+- name: Install dependencies
+  import_tasks: dependencies.yml
 
 ### NordVPN
-- name: Check if nordvpn repo is installed
-  command: dpkg-query -W nordvpn-release
-  register: nordvpn_repo_check
-  failed_when: nordvpn_repo_check.rc > 1
-  changed_when: nordvpn_repo_check.rc == 1
-- name: Download nordvpn repo
-  when: nordvpn_repo_check.rc == 1
-  get_url:
-    url: https://repo.nordvpn.com/deb/nordvpn/debian/pool/main/nordvpn-release_1.0.0_all.deb
-    dest: /tmp/nordvpn-release_1.0.0_all.deb
-- name: Install nordvpn repo
-  become: yes
-  when: nordvpn_repo_check.rc == 1
-  apt:
-    deb: /tmp/nordvpn-release_1.0.0_all.deb
-- name: Install nordvpn
-  become: yes
-  apt:
-    package: nordvpn
-    state: present
-    update_cache: yes
+- name: Install NordVPN
+  import_tasks: nordvpn.yml
+
 ### ~/bin
-- name: Ensure ~/bin
-  file:
-    path: "{{ ansible_env.HOME }}/bin"
-    state: directory
-    mode: '0755'
-- name: Ensure local bin
-  blockinfile:
-    dest: "{{ ansible_env.HOME }}/.bashrc"
-    block: |
-      export PATH=$HOME/bin:$PATH
-    marker: '# {mark} ANSIBLE MANAGED BLOCK - $HOME/bin'
+- name: Setup local bin directory
+  import_tasks: localbin.yml
 
 ### ngrok
-- name: Check that the ngrok bin exists
-  stat:
-    path: "{{ ansible_env.HOME }}/bin/ngrok"
-  register: ngrok_result
-- name: Download and install ngrok
-  when: ngrok_result.stat.exists == False
-  unarchive:
-    src: https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip
-    dest: "{{ ansible_env.HOME}}/bin/"
-    remote_src: yes
-- name: Update ngrok
-  command: "{{ ansible_env.HOME}}/bin/ngrok update"
-- name: Link ngrok
-  when: ngrok_auth_token is defined
-  command: "{{ ansible_env.HOME}}/bin/ngrok authtoken {{ ngrok_auth_token }}"
+- name: Setup ngrok
+  import_tasks: ngrok.yml
 
 ### nodenv
-- name: Clone nodenv
-  git:
-    repo: https://github.com/nodenv/nodenv.git
-    dest: "{{ ansible_env.HOME }}/.nodenv"
-- name: Ensure nodenv config
-  blockinfile:
-    dest: "{{ ansible_env.HOME }}/.bashrc"
-    block: |
-      export PATH="$HOME/.nodenv/bin:$PATH"
-      eval "$(nodenv init -)"
-    marker: '# {mark} ANSIBLE MANAGED BLOCK - nodenv'
-- name: node-build
-  git:
-    repo: https://github.com/nodenv/node-build.git
-    dest: "{{ ansible_env.HOME }}/.nodenv/plugins/node-build"
+- name: Setup nodenv
+  import_tasks: nodenv.yml

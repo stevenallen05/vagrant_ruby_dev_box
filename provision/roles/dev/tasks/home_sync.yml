@@ -1,0 +1,16 @@
+---
+
+- name: Sync $HOME
+  synchronize:
+      src: "home/"
+      dest: "{{ ansible_env.HOME }}/"
+      rsync_opts:
+        - "--exclude=*.j2"
+
+- name: Template files for home/
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ ansible_env.HOME }}/{{ item.path | regex_replace('\\.j2') }}"
+    mode: '{{ item.mode }}'
+  with_filetree: home/
+  when: "item.state == 'file' and ( item.path is regex(\".*\\.j2\"))"

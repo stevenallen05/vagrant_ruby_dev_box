@@ -58,7 +58,7 @@ Vagrant.configure("2") do |config|
     vb.gui = false
   #
   #   # Customize the amount of memory on the VM:
-    vb.memory = "4096"
+    vb.memory = (1024*8).to_s
     vb.cpus = 2
   end
   #
@@ -66,9 +66,9 @@ Vagrant.configure("2") do |config|
   # information on available options.
 
   config.vm.provision "ansible" do |ansible|
-    ansible.galaxy_role_file = "provision/requirements.yml"
+    # ansible.galaxy_role_file = "provision/requirements.yml"
     ansible.playbook = "provision/playbook.yml"
-    ansible.extra_vars = { ansible_python_interpreter:"/usr/bin/python3" }
+    # ansible.extra_vars = { ansible_python_interpreter: "/usr/local/bin/python2" }
   end
 
 end

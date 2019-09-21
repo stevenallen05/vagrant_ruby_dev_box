@@ -1,0 +1,22 @@
+- name: Check that the ngrok bin exists
+  stat:
+    path: "{{ ansible_env.HOME }}/bin/ngrok"
+  register: ngrok_result
+- name: Download and install ngrok
+  when: ngrok_result.stat.exists == False
+  unarchive:
+    src: https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip
+    dest: "{{ ansible_env.HOME}}/bin/"
+    remote_src: yes
+- name: Update ngrok
+  command: "{{ ansible_env.HOME}}/bin/ngrok update"
+- name: Link ngrok
+  when: ngrok_auth_token is defined
+  command: "{{ ansible_env.HOME}}/bin/ngrok authtoken {{ ngrok_auth_token }}"
+- name: set inotify watchers
+  become: yes
+  sysctl:
+    name: fs.inotify.max_user_watches
+    value: "524288"
+    state: present
+    reload: yes

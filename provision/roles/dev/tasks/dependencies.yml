@@ -1,0 +1,54 @@
+- name: Add heroku key
+  become: yes
+  apt_key:
+    url: http://toolbelt.herokuapp.com/apt/release.key
+    state: present
+
+- name: Ensure unison job exists
+  cron:
+    name: "sync gits with host"
+    minute: "*/30"
+    job: "/usr/bin/flock -n /tmp/synclock -c 'unison gits' > /dev/null"
+
+- name: Ensure time sync job exists
+  become: yes
+  cron:
+    name: "timesync"
+    minute: "*/13"
+    job: "ntpdate pool.ntp.org > /dev/null"
+
+- name: "Install basic dependencies"
+  become: yes
+  apt:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+    - ca-certificates
+    - software-properties-common
+    - dirmngr
+    - gcc
+    - wget
+    - libssl-dev
+    - libreadline-dev
+    - zlib1g-dev
+    - libcurl4
+    - libcurl4-openssl-dev
+    - libpq-dev
+    - unzip
+    - python-psycopg2
+    - python3-pip
+- name: "Python postgres dependencies (used in provisioning users)"
+  pip: 
+    name: psycopg2-binary
+  become: yes
+- name: "Install helpful things"
+  become: yes
+  apt:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+    - screen
+    - glances
+

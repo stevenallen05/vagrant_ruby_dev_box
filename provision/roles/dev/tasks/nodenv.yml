@@ -1,0 +1,15 @@
+- name: Clone nodenv
+  git:
+    repo: https://github.com/nodenv/nodenv.git
+    dest: "{{ ansible_env.HOME }}/.nodenv"
+- name: Ensure nodenv config
+  blockinfile:
+    dest: "{{ ansible_env.HOME }}/.bashrc"
+    block: |
+      export PATH="$HOME/.nodenv/bin:$PATH"
+      eval "$(nodenv init -)"
+    marker: '# {mark} ANSIBLE MANAGED BLOCK - nodenv'
+- name: node-build
+  git:
+    repo: https://github.com/nodenv/node-build.git
+    dest: "{{ ansible_env.HOME }}/.nodenv/plugins/node-build"
