@@ -38,10 +38,19 @@
     - unzip
     - python-psycopg2
     - python3-pip
-- name: "Python postgres dependencies (used in provisioning users)"
-  pip: 
-    name: psycopg2-binary
+
+- name: "Python dependencies"
   become: yes
+  pip: 
+    executable: pip3
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+      - setuptools
+      - psycopg2-binary
+      - glances
+
 - name: "Install helpful things"
   become: yes
   apt:
@@ -49,6 +58,5 @@
     state: present
   vars:
     packages:
-    - screen
-    - glances
+    - tmux
 

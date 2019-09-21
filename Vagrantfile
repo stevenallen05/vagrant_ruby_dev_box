@@ -66,9 +66,12 @@ Vagrant.configure("2") do |config|
   # information on available options.
 
   config.vm.provision "ansible" do |ansible|
-    # ansible.galaxy_role_file = "provision/requirements.yml"
+    ansible.galaxy_role_file = "provision/requirements.yml"
     ansible.playbook = "provision/playbook.yml"
-    # ansible.extra_vars = { ansible_python_interpreter: "/usr/local/bin/python2" }
+    # ansible.extra_vars = { ansible_python_interpreter: "/usr/local/bin/python3" }
+
+    ansible.verbose = "vvv"
+
   end
 
 end

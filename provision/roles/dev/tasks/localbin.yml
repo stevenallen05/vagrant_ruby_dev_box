@@ -5,7 +5,7 @@
     mode: '0755'
 - name: Ensure local bin
   blockinfile:
-    dest: "{{ ansible_env.HOME }}/.bashrc"
+    dest: "{{ ansible_env.HOME }}/.zshrc"
     block: |
       export PATH=$HOME/bin:$PATH
     marker: '# {mark} ANSIBLE MANAGED BLOCK - $HOME/bin'

@@ -4,7 +4,7 @@
     dest: "{{ ansible_env.HOME }}/.nodenv"
 - name: Ensure nodenv config
   blockinfile:
-    dest: "{{ ansible_env.HOME }}/.bashrc"
+    dest: "{{ ansible_env.HOME }}/.zshrc"
     block: |
       export PATH="$HOME/.nodenv/bin:$PATH"
       eval "$(nodenv init -)"

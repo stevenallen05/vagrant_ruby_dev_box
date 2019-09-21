@@ -10,10 +10,6 @@
 - name: $HOME templating
   import_tasks: home_sync.yml
 
-### Bash themes
-- name: Setup bash themes
-  import_tasks: ohmybash.yml
-
 ### Cleanup
 - name: Install dependencies
   import_tasks: dependencies.yml

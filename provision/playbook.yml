@@ -1,6 +1,7 @@
 ---
 - hosts: all
   remote_user: root
+  # connection: local
   vars_files:
     - ../config.yml
   pre_tasks:
@@ -30,14 +31,25 @@
         name: postgresql
         state: reloaded
   roles:
-    - dev
+    - role: gantsign.oh-my-zsh
+      become: yes
+      users:
+        - username: vagrant
+          oh_my_zsh:
+            theme: agnoster
+            plugins:
+              - git
+              - ruby
+              - ubuntu
+              - vscode
+              - common-aliases
     - role: jdauphant.unbound
       become: yes
       # Forward server to Cloudflare DNS
       unbound_forward_zone:
         - "1.1.1.1@853#cloudflare-dns.com"
         - "1.0.0.1@853#cloudflare-dns.com"
-
+    - dev
     - role: weareinteractive.unison
       become: yes
       unison_user: vagrant
