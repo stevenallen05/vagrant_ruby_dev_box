@@ -38,18 +38,21 @@
     - unzip
     - python-psycopg2
     - python3-pip
+    - python3-setuptools
+    - glances
 
-- name: "Python dependencies"
-  become: yes
-  pip: 
-    executable: pip3
-    name: "{{ packages }}"
-    state: present
-  vars:
-    packages:
-      - setuptools
-      - psycopg2-binary
-      - glances
+# - name: "Python dependencies"
+#   become: yes
+#   pip: 
+#     executable: pip3
+#     name: "glances"
+#     name: "{{ packages }}"
+#     state: present
+#   vars:
+#     packages:
+#       - setuptools
+#       - psycopg2-binary
+#       - glances
 
 - name: "Install helpful things"
   become: yes
