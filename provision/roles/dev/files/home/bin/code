@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+@args = ARGV.join(" ")
+
+@code_binary = Dir["#{ENV['HOME']}/.vscode-server/bin/**/bin/code"].first
+
+`#{@code_binary} #{@args}`

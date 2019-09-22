@@ -4,7 +4,7 @@
   # connection: local
   vars_files:
     - ../config.yml
-    - vars.xml
+    - vars.yml
   pre_tasks:
     - name: Update apt
       become: yes
@@ -37,10 +37,12 @@
         block: |
           export PATH="$HOME/.rbenv/bin:$PATH"
           eval "$(rbenv init -)"
+          POWERLEVEL9K_RBENV_PROMPT_ALWAYS_SHOW=true
         marker: '# {mark} ANSIBLE MANAGED BLOCK - rbenv'
 
   roles:
-    - viasite-ansible.zsh
+    - role: viasite-ansible.zsh
+      become: yes
     - role: jdauphant.unbound
       become: yes
       # Forward server to Cloudflare DNS
