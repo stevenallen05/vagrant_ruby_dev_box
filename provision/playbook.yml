@@ -43,7 +43,7 @@
       lineinfile:
         path: "{{ ansible_env.HOME }}/.zshrc"
         insertbefore: BOF
-        line: "POWERLEVEL9K_MODE={{ nerdfont-complete }}"
+        line: "POWERLEVEL9K_MODE={{ zsh_pwerlevel_mode }}"
   roles:
     - role: viasite-ansible.zsh
       become: yes
