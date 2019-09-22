@@ -90,9 +90,6 @@
       become: yes
     - role: geerlingguy.redis
       become: yes
-    - role: silverlogic.rabbitmq
-      rabbitmq_ssl: false
-      become: yes
     - role: geerlingguy.mailhog
       become: yes
     - role: zzet.rbenv

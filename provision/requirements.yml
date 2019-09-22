@@ -1,6 +1,5 @@
   - src: simplifield.postgres
   - src: geerlingguy.redis
-  - src: silverlogic.rabbitmq
   - src: geerlingguy.mailhog
   - src: zzet.rbenv
   - src: weareinteractive.unison
