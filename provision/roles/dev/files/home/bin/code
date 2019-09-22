@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+### This shim exists to make the `code` command work properly within ZSH on a VScode remote SSH session
 
 @args = ARGV.join(" ")
 
