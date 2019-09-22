@@ -29,3 +29,10 @@
 ### nodenv
 - name: Setup nodenv
   import_tasks: nodenv.yml
+
+### goenv
+- name: Setup goenv
+  import_tasks: goenv.yml
+
+- name: Start unison filesync
+  command: /bin/sh -c '({{ ansible_env.HOME }}/bin/workspace_sync >/dev/null 2&>/dev/null &)'

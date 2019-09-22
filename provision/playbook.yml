@@ -39,16 +39,25 @@
           eval "$(rbenv init -)"
           POWERLEVEL9K_RBENV_PROMPT_ALWAYS_SHOW=true
         marker: '# {mark} ANSIBLE MANAGED BLOCK - rbenv'
+    - name: Ensure goenv config
+      blockinfile:
+        dest: "{{ ansible_env.HOME }}/.zshrc"
+        block: |
+          export PATH="$HOME/.goenv/bin:$PATH"
+          eval "$(goenv init -)"
+        marker: '# {mark} ANSIBLE MANAGED BLOCK - goenv'
     - name: Set ZSH font
       lineinfile:
         path: "{{ ansible_env.HOME }}/.zshrc"
         insertbefore: BOF
         line: "POWERLEVEL9K_MODE={{ zsh_pwerlevel_mode }}"
-    - name: Unison sync on login
-      lineinfile:
-        path: "{{ ansible_env.HOME }}/.zshrc"
-        insertafter: EOF
-        line: "(/home/vagrant/bin/workspace_sync >/dev/null 2&>1 &)"
+    - name: Last-minute zsh config
+      blockinfile:
+        block: |
+          ({{ ansible_env.HOME }}/bin/workspace_sync >/dev/null 2&>/dev/null &)
+          export PATH="`echo ~/.vscode-server/bin/*/bin`:$PATH"
+        dest: "{{ ansible_env.HOME }}/.zshrc"
+        marker: '# {mark} ANSIBLE MANAGED BLOCK - last minute config fixes'
         
   roles:
     - role: viasite-ansible.zsh
@@ -59,7 +68,6 @@
       unbound_forward_zone:
         - "1.1.1.1@853#cloudflare-dns.com"
         - "1.0.0.1@853#cloudflare-dns.com"
-    - dev
     - role: weareinteractive.unison
       become: yes
       unison_user: vagrant
@@ -75,6 +83,7 @@
             - Path */cache/*
             - Path */tmp/*
     - krypton
+    - dev
     - role: bearandgiraffe.heroku-cli
       become: yes
     - role: simplifield.postgres

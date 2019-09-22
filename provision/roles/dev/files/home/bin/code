@@ -1,8 +1,0 @@
-#!/usr/bin/env ruby
-### This shim exists to make the `code` command work properly within ZSH on a VScode remote SSH session
-
-@args = ARGV.join(" ")
-
-@code_binary = Dir["#{ENV['HOME']}/.vscode-server/bin/**/bin/code"].first
-
-`#{@code_binary} #{@args}`

@@ -1,0 +1,11 @@
+- name: Clone goenv
+  git:
+    repo: https://github.com/syndbg/goenv.git
+    dest: "{{ ansible_env.HOME }}/.goenv"
+- name: Ensure goenv config
+  blockinfile:
+    dest: "{{ ansible_env.HOME }}/.zshrc"
+    block: |
+      export PATH="$HOME/.goenv/bin:$PATH"
+      eval "$(goenv init -)"
+    marker: '# {mark} ANSIBLE MANAGED BLOCK - goenv'

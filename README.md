@@ -10,13 +10,14 @@
  * RabbitMQ
  * rbenv w/ ruby-build default-gems plugins
  * nodenv w/ node-build plugin
+ * goenv
  * DNS-over-TLS to cloudflare
  * Nordvpn
  * Krypt.co for SSH key management
  * Unison sync between `~/host_home/gits` and `~/gits`
  * Mailhog
  * Ngrok
- * Git bash prompt from https://github.com/magicmonty/bash-git-prompt
+ * ZSH w/ powerlevel9k (tweak in `config.yml`)
 
 #### Config
 
