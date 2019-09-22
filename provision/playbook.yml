@@ -44,6 +44,12 @@
         path: "{{ ansible_env.HOME }}/.zshrc"
         insertbefore: BOF
         line: "POWERLEVEL9K_MODE={{ zsh_pwerlevel_mode }}"
+    - name: Unison sync on login
+      lineinfile:
+        path: "{{ ansible_env.HOME }}/.zshrc"
+        insertafter: EOF
+        line: "(/home/vagrant/bin/workspace_sync >/dev/null 2&>1 &)"
+        
   roles:
     - role: viasite-ansible.zsh
       become: yes

@@ -8,7 +8,7 @@
   cron:
     name: "sync gits with host"
     minute: "*/30"
-    job: "/usr/bin/flock -n /tmp/synclock -c 'unison gits' > /dev/null"
+    job: "{{ ansible_env.HOME }}/bin/workspace_sync > /dev/null"
 
 - name: Ensure time sync job exists
   become: yes
