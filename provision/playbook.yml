@@ -39,7 +39,11 @@
           eval "$(rbenv init -)"
           POWERLEVEL9K_RBENV_PROMPT_ALWAYS_SHOW=true
         marker: '# {mark} ANSIBLE MANAGED BLOCK - rbenv'
-
+    - name: Set ZSH font
+      lineinfile:
+        path: "{{ ansible_env.HOME }}/.zshrc"
+        insertbefore: BOF
+        line: "POWERLEVEL9K_MODE={{ nerdfont-complete }}"
   roles:
     - role: viasite-ansible.zsh
       become: yes
