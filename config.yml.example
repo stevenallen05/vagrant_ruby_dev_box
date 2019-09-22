@@ -8,3 +8,30 @@ host_workspace_path: gits/
 
 # Your ngrok auth token (https://dashboard.ngrok.com/get-started)
 ngrok_auth_token: XXXXXXXXXXXXXXXXXXXXXXXXXX
+rubygems_api_key: XXXXXXXXXXXXXXXXXXXXXXXXXX
+
+zsh_theme: agnoster
+
+zsh_powerlevel9k_prompt_on_newline: true
+zsh_mc_solarized_skin: yes
+
+zsh_antigen_bundles_extras:
+  - ubuntu
+  - rbenv
+  - ruby
+
+zsh_powerlevel9k_left_prompt:
+  - context
+  - rbenv
+  - dir
+
+zsh_powerlevel9k_right_prompt:
+  - status
+  - background_jobs
+  - vcs
+  - command_execution_time
+  - time
+
+# This font needs to be installed on your local machine.
+# See here for instructions: https://github.com/ryanoasis/nerd-fonts#font-installation
+zsh_pwerlevel_mode: nerdfont-complete
