@@ -36,6 +36,8 @@
     - glances
     - rabbitmq-server
     - python-pexpect
+    - imagemagick
+    - libmagickwand-dev
 
 # - name: "Python dependencies"
 #   become: yes
