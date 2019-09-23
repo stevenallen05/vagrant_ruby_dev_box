@@ -58,7 +58,26 @@
           export PATH="`echo ~/.vscode-server/bin/*/bin`:$PATH"
         dest: "{{ ansible_env.HOME }}/.zshrc"
         marker: '# {mark} ANSIBLE MANAGED BLOCK - last minute config fixes'
-        
+    - name: Create .kr directory
+      file:
+        path: "{{ ansible_env.HOME }}/.kr"
+        state: directory
+        mode: '0755'
+    - name: Copy kr me file
+      copy:
+        src: kr/me
+        dest: "{{ ansible_env.HOME }}/.kr/me"
+        mode: '0600'
+    - name: Copy kr pairing file
+      copy:
+        src: kr/pairing.json
+        dest: "{{ ansible_env.HOME }}/.kr/pairing.json"
+        mode: '0600'
+    - name: Setup kr codesign
+      expect:
+        command: kr codesign
+        responses:
+          (.*)Would you like to add this key to(.*): "N"
   roles:
     - role: viasite-ansible.zsh
       become: yes
@@ -75,6 +94,7 @@
         - name: gits
           src: "/home/vagrant/host_home/{{ host_workspace_path }}"
           dest: /home/vagrant/gits
+          repeat: watch
           ignore:
             - Path */build/*
             - Name *.log

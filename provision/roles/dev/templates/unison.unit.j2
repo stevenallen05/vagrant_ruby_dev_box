@@ -1,0 +1,9 @@
+[Unit]
+Description=Unison filesystem monitor
+After=syslog.target multi-user.target remote-fs.target nfs-client.target
+
+[Service]
+Type=simple
+ExecStart={{ ansible_env.HOME }}/bin/workspace_sync
+StandardOutput=journal
+Restart=on-failure

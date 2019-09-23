@@ -4,12 +4,6 @@
     url: http://toolbelt.herokuapp.com/apt/release.key
     state: present
 
-- name: Ensure unison job exists
-  cron:
-    name: "sync gits with host"
-    minute: "*/30"
-    job: "{{ ansible_env.HOME }}/bin/workspace_sync > /dev/null"
-
 - name: Ensure time sync job exists
   become: yes
   cron:
@@ -41,6 +35,7 @@
     - python3-setuptools
     - glances
     - rabbitmq-server
+    - python-pexpect
 
 # - name: "Python dependencies"
 #   become: yes

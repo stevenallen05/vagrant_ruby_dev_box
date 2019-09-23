@@ -34,5 +34,14 @@
 - name: Setup goenv
   import_tasks: goenv.yml
 
-- name: Start unison filesync
-  command: /bin/sh -c '({{ ansible_env.HOME }}/bin/workspace_sync >/dev/null 2&>/dev/null &)'
+# - name: Start unison filesync
+#   command: /bin/sh -c '({{ ansible_env.HOME }}/bin/workspace_sync >/dev/null 2&>/dev/null &)'
+
+# - name: Get unison filesystem watcher
+#   get_url:
+#     url: https://github.com/TentativeConvert/Syndicator/raw/master/unison-binaries/unison-fsmonitor
+#     dest: "{{ ansible_env.HOME }}/bin/unison-fsmonitor"
+#     mode: '0755'
+
+- name: Setup unison daemon
+  import_tasks: unison.yml

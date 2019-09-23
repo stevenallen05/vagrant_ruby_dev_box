@@ -1,0 +1,25 @@
+- name: Copy unison systemd unit file into place (for systemd systems).
+  become: yes
+  template:
+    src: unison.unit.j2
+    dest: /etc/systemd/system/unison.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Create a symbolic link
+  become: yes
+  file:
+    src: /etc/systemd/system/unison.service
+    dest: /usr/lib/systemd/user/unison.service
+    owner: root
+    group: root
+    state: link
+
+- name: Ensure unison is enabled and will start on boot.
+  become: no
+  service: 
+    name: unison
+    state: started
+    scope: user
+    enabled: yes
