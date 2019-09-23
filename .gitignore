@@ -7,3 +7,4 @@ provision/roles/*
 config.yml
 provision/files/home/.gem/credentials
 provision/files/kr/*
+zshrc.local

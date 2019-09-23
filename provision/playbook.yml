@@ -73,6 +73,10 @@
         src: kr/pairing.json
         dest: "{{ ansible_env.HOME }}/.kr/pairing.json"
         mode: '0600'
+    - name: Copy zsh.rc.local
+      copy:
+        src: ../../zshrc.local
+        dest: "{{ ansible_env.HOME }}/.zshrc.local"
     - name: Setup kr codesign
       expect:
         command: kr codesign
