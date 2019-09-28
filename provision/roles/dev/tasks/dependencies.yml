@@ -38,6 +38,9 @@
     - python-pexpect
     - imagemagick
     - libmagickwand-dev
+    - screenfetch
+    - powertop
+    - libsqlite3-dev
 
 # - name: "Python dependencies"
 #   become: yes
